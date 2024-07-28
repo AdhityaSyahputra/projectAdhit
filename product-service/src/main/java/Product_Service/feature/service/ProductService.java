@@ -48,7 +48,7 @@ public class ProductService {
         }
 
         // If not in cache, search in repository
-        List<Product> results = StreamSupport.stream(productRepository.findByNameContaining(keyword).spliterator(), false)
+        List<Product> results = StreamSupport.stream(productRepository.findByNameContainingIgnoreCase(keyword).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Cache the search results

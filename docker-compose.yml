@@ -11,54 +11,6 @@ services:
     networks:
       - ecomm-network
 
-  user-service:
-    build: ./user-service
-    ports:
-      - "8081:8081"
-    networks:
-      - ecomm-network
-    depends_on:
-      - postgresql
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-
-  product-service:
-    build: ./product-service
-    ports:
-      - "8082:8082"
-    networks:
-      - ecomm-network
-    depends_on:
-      - elasticsearch
-    environment:
-      - SPRING_DATA_ELASTICSEARCH_CLIENT_NODES = elasticsearch:9200
-      - SPRING_PROFILES_ACTIVE=dev
-    links:
-      - redis
-
-  order-service:
-    build: ./order-service
-    ports:
-      - "8083:8083"
-    networks:
-      - ecomm-network
-    depends_on:
-      - postgresql
-      - kafka
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-
-  notification-service:
-    build: ./notification-service
-    ports:
-      - "8084:8084"
-    networks:
-      - ecomm-network
-    depends_on:
-      - kafka
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-
   kafka:
     image: wurstmeister/kafka:2.13-2.7.0
     ports:
@@ -96,6 +48,55 @@ services:
       POSTGRES_PASSWORD: root
     networks:
       - ecomm-network
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8081:8081"
+    networks:
+      - ecomm-network
+    depends_on:
+      - postgresql
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  product-service:
+    build: ./product-service
+    ports:
+      - "8082:8082"
+    networks:
+      - ecomm-network
+    depends_on:
+      - elasticsearch
+      - redis
+    environment:
+      - SPRING_DATA_ELASTICSEARCH_CLIENT_NODES = elasticsearch:9200
+      - SPRING_PROFILES_ACTIVE=dev
+    links:
+      - redis
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8083:8083"
+    networks:
+      - ecomm-network
+    depends_on:
+      - postgresql
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8084:8084"
+    networks:
+      - ecomm-network
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
 
 
 networks:
